@@ -37,6 +37,7 @@ def decimal_to_int(data):
         return {k: decimal_to_int(v) for k, v in data.items()}
     return data
 
+
 class CorporateData:
     _instance = None
 
@@ -47,6 +48,12 @@ class CorporateData:
             cls.table = cls.dynamodb.Table('CorporateData')
             logger.debug("Se ha creado una nueva instancia de CorporateData.")
         return cls._instance
+    
+    #def __init__(self):
+    #    self.dynamodb = boto3.resource('dynamodb')
+    #    self.table = self.dynamodb.Table('CorporateData')
+    #    logger.debug("Se ha creado una nueva instancia de CorporateData.")
+    
     
     # Funcio getData
     def getData(self, uuid_session, uuidCPU, id):

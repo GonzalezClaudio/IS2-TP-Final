@@ -33,6 +33,7 @@ class Log:
     def post(self, uuid_session, method_name):
         cpu_info = platform.uname()  # Obtener información de la CPU
         timestamp = datetime.datetime.now().isoformat()  # Obtener timestamp
+        
 
         log_entry = {
             "id": str(uuid.uuid4()),  

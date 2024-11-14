@@ -72,7 +72,7 @@ class CorporateData:
                     "id": item.get('id'),
                     "domicilio": item.get('domicilio'),
                     "localidad": item.get('localidad'),
-                    "cp": item.get('codigo_postal'),
+                    "cp": item.get('cp'),
                     "provincia": item.get('provincia')
                 })
             else:

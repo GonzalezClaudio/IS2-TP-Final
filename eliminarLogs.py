@@ -1,5 +1,7 @@
 import boto3
 from botocore.exceptions import ClientError
+from boto3.dynamodb.conditions import Attr
+import platform  # Para obtener el identificador único de la máquina
 
 class Log:
     _instance = None
@@ -10,13 +12,15 @@ class Log:
             cls.table = boto3.resource('dynamodb').Table('CorporateLog')  # Conectar con la tabla de DynamoDB
         return cls._instance
 
-    def delete_all_logs(self):
+    def delete_logs_by_machine(self):
         try:
-            # Usar scan para obtener todos los logs
-            response = self.table.scan()
+            # Filtrar los logs que pertenecen a la máquina actual usando 'cpu_node'
+            response = self.table.scan(
+                FilterExpression=Attr('cpu_node').eq(platform.node())
+            )
             logs = response.get('Items', [])
 
-            # Bucle para eliminar cada log
+            # Bucle para eliminar cada log filtrado
             for log in logs:
                 self.table.delete_item(
                     Key={
@@ -27,7 +31,10 @@ class Log:
 
             # Manejo de paginación en caso de que haya más logs
             while 'LastEvaluatedKey' in response:
-                response = self.table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
+                response = self.table.scan(
+                    ExclusiveStartKey=response['LastEvaluatedKey'],
+                    FilterExpression=Attr('cpu_node').eq(platform.node())
+                )
                 logs = response.get('Items', [])
                 for log in logs:
                     self.table.delete_item(
@@ -37,6 +44,8 @@ class Log:
                     )
                     print(f"Log eliminado: {log['id']}")
 
+            print("Eliminación de logs completada para la máquina actual.")
+
         except ClientError as e:
             print(f"Error al eliminar logs: {str(e)}")
         except Exception as e:
@@ -45,5 +54,6 @@ class Log:
 # Ejemplo de uso
 if __name__ == "__main__":
     log_instance = Log()
-    log_instance.delete_all_logs()
+    log_instance.delete_logs_by_machine()
+
 

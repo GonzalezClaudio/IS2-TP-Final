@@ -67,6 +67,7 @@ def pruebaGetData():
     corporate_log = CorporateLog()
     corporate_log.logEvent(session_id, "PruebaGetData")  
     print("Evento almacenado en el log.")
+    print("")
 
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -125,7 +126,7 @@ def pruebaGetCUIT():
     corporate_log = CorporateLog()
     corporate_log.logEvent(session_id, "PruebaGetCUIT")  
     print("Evento almacenado en el log.")
-
+    print("")
 #-----------------------------------------------------------------------------------------------------------------------
 # Listar todos los logs
 #-----------------------------------------------------------------------------------------------------------------------

@@ -5,20 +5,27 @@ import os
 
 # Agregar la carpeta raíz del proyecto al PYTHONPATH para poder importar las librerías
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from src.corporate_data import CorporateData  
+from src.corporate_data import CorporateData 
+from src.corporate_log import CorporateLog 
 from config import ID_KEY
 
 class TestCorporateData:
     
     def __init__(self):  
         self.corporate_data = CorporateData()  
-        self.uuid_session = uuid.uuid4()  
+        self.corporate_log = CorporateLog()  
         self.uuidCPU = platform.node()  
 
     # Prueba para obtener datos con un ID válido
-    def test_get_data_success(self):  
-        print(f"Ejecutando test_get_data_success (datos validos) con uuid_session: {self.uuid_session} y uuidCPU: {self.uuidCPU}")
-        response = self.corporate_data.getData(self.uuid_session, self.uuidCPU, ID_KEY)  
+    def test_get_data_success(self):
+        uuid_session = uuid.uuid4()  
+        print(f"Ejecutando test_get_data_success (datos validos) con uuid_session: {uuid_session} y uuidCPU: {self.uuidCPU}")
+
+        # Registrar el evento
+        self.corporate_log.logEvent(uuid_session, "test_get_data_success")
+        print("Evento almacenado en el log.")
+
+        response = self.corporate_data.getData(uuid_session, self.uuidCPU, ID_KEY)  
         print(f"Respuesta obtenida: {response}")
         
         if "error" in response:
@@ -28,9 +35,15 @@ class TestCorporateData:
             print()
 
     # Prueba para obtener datos con un ID inválido
-    def test_get_data_invalid_id(self):  
-        print(f"Ejecutando test_get_data_invalid_id (id invalido) con uuid_session: {self.uuid_session} y uuidCPU: {self.uuidCPU}")
-        response = self.corporate_data.getData(self.uuid_session, self.uuidCPU, "invalid_id")  
+    def test_get_data_invalid_id(self):
+        uuid_session = uuid.uuid4()  
+        print(f"Ejecutando test_get_data_invalid_id (id invalido) con uuid_session: {uuid_session} y uuidCPU: {self.uuidCPU}")
+
+        # Registrar el evento
+        self.corporate_log.logEvent(uuid_session, "test_get_data_invalid_id")
+        print("Evento almacenado en el log.")
+
+        response = self.corporate_data.getData(uuid_session, self.uuidCPU, "invalid_id")  
         print(f"Respuesta obtenida: {response}")
         
         if "error" not in response:
@@ -40,9 +53,15 @@ class TestCorporateData:
             print()
 
     # Prueba para obtener datos con un ID vacío
-    def test_get_data_empty_id(self):  
-        print(f"Ejecutando test_get_data_empty_id (id vacio) con uuid_session: {self.uuid_session} y uuidCPU: {self.uuidCPU}")
-        response = self.corporate_data.getData(self.uuid_session, self.uuidCPU, "")  
+    def test_get_data_empty_id(self):
+        uuid_session = uuid.uuid4()  
+        print(f"Ejecutando test_get_data_empty_id (id vacio) con uuid_session: {uuid_session} y uuidCPU: {self.uuidCPU}")
+
+        # Registrar el evento
+        self.corporate_log.logEvent(uuid_session, "test_get_data_empty_id")
+        print("Evento almacenado en el log.")
+
+        response = self.corporate_data.getData(uuid_session, self.uuidCPU, "")  
         print(f"Respuesta obtenida: {response}")
         
         if "error" not in response:
@@ -52,10 +71,16 @@ class TestCorporateData:
             print()
 
     # Nueva prueba para ID válido pero campo vacío
-    def test_get_data_valid_id_empty_field(self):  
+    def test_get_data_valid_id_empty_field(self):
+        uuid_session = uuid.uuid4()  
         valid_id = ID_KEY  
-        print(f"Ejecutando test_get_data_valid_id_empty_field (id valido, campo vacio) con uuid_session: {self.uuid_session} y uuidCPU vacío")
-        response = self.corporate_data.getData(self.uuid_session, "", valid_id)  
+        print(f"Ejecutando test_get_data_valid_id_empty_field (id valido, campo vacio) con uuid_session: {uuid_session} y uuidCPU vacío")
+
+        # Registrar el evento
+        self.corporate_log.logEvent(uuid_session, "test_get_data_valid_id_empty_field")
+        print("Evento almacenado en el log.")
+
+        response = self.corporate_data.getData(uuid_session, "", valid_id)  
         print(f"Respuesta obtenida: {response}")
         
         if "error" not in response:
@@ -83,5 +108,4 @@ if __name__ == '__main__':
     tester.test_get_data_empty_id()
     tester.test_get_data_valid_id_empty_field()
     tester.test_singleton_corporate_data()
-
 

@@ -33,18 +33,13 @@ class Log:
     def post(self, uuid_session, method_name):
         cpu_info = platform.uname()  # Obtener información de la CPU
         timestamp = datetime.datetime.now().isoformat()  # Obtener timestamp
+        cpu_idd = str(uuid.getnode())
         
-
         log_entry = {
             "id": str(uuid.uuid4()),  
             "uuid_session": str(uuid_session),
-            "method_name": method_name,
-            "cpu_system": cpu_info.system,  
-            "cpu_node": cpu_info.node,
-            "cpu_release": cpu_info.release,
-            "cpu_version": cpu_info.version,
-            "cpu_machine": cpu_info.machine,
-            "cpu_processor": cpu_info.processor,
+            "method_name": method_name, 
+            "cpu_id": cpu_idd,
             "timestamp": timestamp
         }
 
@@ -55,13 +50,10 @@ class Log:
         except ClientError as e:
             logger.error(f"Error al registrar el log en DynamoDB: {str(e)}")
 
-    
-    
     def list(self, cpu_id, uuid_session=None):
         try:
-        
             response = self.table.scan(
-                FilterExpression=Attr('cpu_node').eq(cpu_id)  # Filtrar por el atributo
+                FilterExpression=Attr('cpu_id').eq(cpu_id)  # Filtrar por el atributo
             )
 
             return response.get('Items', [])

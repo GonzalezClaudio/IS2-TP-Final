@@ -31,7 +31,7 @@ def list_all_corporate_data():
     id_to_increment = ID_KEY  
     try:
         new_id_seq = corporate_data.getSeqID(session_id, uuid_cpu, id_to_increment)  
-        print(f"Nuevo ID de secuencia: {new_id_seq}")  
+        #print(f"Nuevo ID de secuencia: {new_id_seq}")  
     except Exception as e:
         print(f"Ocurrió un error al incrementar el ID de secuencia: {str(e)}")
 

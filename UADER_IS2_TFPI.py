@@ -10,7 +10,6 @@ from config import ID_KEY  # Importa solo ID_KEY desde config
 from src.corporate_data import CorporateData  # Asegúrate de que la clase esté importada correctamente
 from src.corporate_log import CorporateLog  # Importar CorporateLog
 
-
 #-----------------------------------------------------------------------------------------------------------------------------------------------
 # Prueba para el funcionamiento de GetData y registro en log
 #-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -29,7 +28,6 @@ def pruebaGetData():
     session_id = str(uuid.uuid4())  
     uuid_cpu = platform.node()  
 
-    
     corporate_data = CorporateData()
     print("Creando instancia de CorporateData...")
 
@@ -132,10 +130,21 @@ def pruebaGetCUIT():
 #-----------------------------------------------------------------------------------------------------------------------
 def listarLogs():
     corporate_log = CorporateLog()  
+
+    # Obtener CPU id
+    cpu_id = str(uuid.getnode())
+
+    # Generar UUIDs
+    session_id = str(uuid.uuid4())
+
+    # Almacenar el evento en el log
+    corporate_log.logEvent(session_id, "listarLogs")
+    print("Evento almacenado en el log.")
+    print("")
     
     try:
         # Listar todos los logs y obtener los logs para la CPU actual
-        logs = corporate_log.listLogs(platform.node())  
+        logs = corporate_log.listLogs(cpu_id)  
 
         if logs:
             total_logs = len(logs)
@@ -149,10 +158,8 @@ def listarLogs():
                 print(f"Log:\n{json.dumps(log, indent=2)}\n")
         else:
             print("No se encontraron logs.")
-
     except Exception as e:
         print(f"Ocurrió un error al intentar listar los logs: {str(e)}")
-
 
 
 if __name__ == "__main__":
